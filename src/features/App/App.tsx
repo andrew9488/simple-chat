@@ -10,6 +10,7 @@ import {
     setClientNameTC,
     writingMessageTC
 } from "../../bll/chat-reducer";
+import {Header} from "../../components/Header/Header";
 
 
 export const App: React.FC = React.memo(() => {
@@ -77,6 +78,7 @@ export const App: React.FC = React.memo(() => {
 
     return (
         <div className="App">
+            <Header/>
             <div style={{
                 border: "1px solid",
                 padding: 10,
