@@ -1,6 +1,6 @@
 import {io, Socket} from "socket.io-client";
 
-type UserType = {
+export type UserType = {
     user_id: string
     name: string
 }
@@ -12,6 +12,7 @@ export type MessageType = {
 
 type MessagesShowedCallback = (messages: Array<MessageType>) => void
 type NewMessageSentCallback = (message: MessageType) => void
+type UserWritingMessageCallback = (user: UserType) => void
 
 export const API = {
     socket: null as Socket | null,
@@ -23,14 +24,18 @@ export const API = {
         this.socket?.close()
         this.socket = null
     },
-    subscribe(messagesShowed: MessagesShowedCallback, newMessageSent: NewMessageSentCallback) {
+    subscribe(messagesShowed: MessagesShowedCallback, newMessageSent: NewMessageSentCallback, writingMessage: UserWritingMessageCallback) {
         this.socket?.on("messages-showed", messagesShowed)
         this.socket?.on("new-message-sent", newMessageSent)
+        this.socket?.on("writing-message", writingMessage)
     },
     sendClientName(name: string) {
-        this.socket?.emit("name-sent", name)
+        this.socket?.emit("client-sent-name ", name)
     },
     sendMessage(message: string) {
-        this.socket?.emit("message-sent", message)
+        this.socket?.emit("client-sent-message", message)
+    },
+    writingMessage() {
+        this.socket?.emit("client-writing-message")
     }
 }

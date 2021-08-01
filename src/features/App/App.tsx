@@ -1,19 +1,25 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import './App.css';
-import {socket} from "../../dal/api";
+import {MessageType, UserType} from "../../dal/api";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../bll/store";
-import {createChannelTC, destroyChannelTC, MessageType} from "../../bll/chat-reducer";
+import {
+    createChannelTC,
+    destroyChannelTC,
+    sendMessageTC,
+    setClientNameTC,
+    writingMessageTC
+} from "../../bll/chat-reducer";
 
 
 export const App: React.FC = React.memo(() => {
 
-    const messagesFromRedux = useSelector<AppRootStateType, Array<MessageType>>(state => state.chat.messages)
+    const messages = useSelector<AppRootStateType, Array<MessageType>>(state => state.chat.messages)
+    const writingUsers = useSelector<AppRootStateType, Array<UserType>>(state => state.chat.writingUsers)
     const dispatch = useDispatch()
 
     const [message, setMessage] = useState("")
     const [name, setName] = useState("")
-    const [messages, setMessages] = useState<Array<MessageType>>([])
     const [isAutoScroll, setIsAutoScroll] = useState(true)
     const [lastScrollTop, setLastScrollTop] = useState(0)
     const messagesEndRef = useRef<HTMLDivElement | null>(null)
@@ -29,7 +35,7 @@ export const App: React.FC = React.memo(() => {
         if (isAutoScroll) {
             scrollToBottom()
         }
-    }, [messages])
+    }, [isAutoScroll, messages])
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({behavior: "smooth"})
@@ -51,9 +57,12 @@ export const App: React.FC = React.memo(() => {
     }
     const onClickMessageHandler = () => {
         if (message.trim() !== "") {
-            socket.emit("message-sent", message)
+            dispatch(sendMessageTC(message))
             setMessage("")
         }
+    }
+    const onKeyPressMessageHandler = () => {
+        dispatch(writingMessageTC())
     }
 
     const onChangeNameHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +70,7 @@ export const App: React.FC = React.memo(() => {
     }
     const onClickNameHandler = () => {
         if (name.trim() !== "") {
-            socket.emit("name-sent", name)
+            dispatch(setClientNameTC(name))
             setName("")
         }
     }
@@ -77,9 +86,15 @@ export const App: React.FC = React.memo(() => {
             }}
                  onScroll={onScrollHandler}>
                 {messages.map(m => {
-                    return <div key={m.user.name + m.id}>
+                    return <div key={m.id}>
                         <b>{m.user.name}: </b> <span>{m.message}</span>
                         <hr/>
+                    </div>
+
+                })}
+                {writingUsers.map(u => {
+                    return <div key={u.user_id}>
+                        <b>{u.name}: </b> <span>...</span>
                     </div>
 
                 })}
@@ -88,7 +103,7 @@ export const App: React.FC = React.memo(() => {
             <div><input value={name} onChange={onChangeNameHandler}/>
                 <button onClick={onClickNameHandler}> send name</button>
             </div>
-            <textarea value={message} onChange={onChangeMessageHandler}/>
+            <textarea value={message} onChange={onChangeMessageHandler} onKeyPress={onKeyPressMessageHandler}/>
             <button onClick={onClickMessageHandler}>send message</button>
         </div>
     );
