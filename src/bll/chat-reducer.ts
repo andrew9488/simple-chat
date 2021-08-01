@@ -1,16 +1,7 @@
 import {Dispatch} from "redux";
+import {API, MessageType} from "../dal/api";
 
 type ChatReducerActionsType = ReturnType<typeof messagesReceivedAC> | ReturnType<typeof newMessageSentAC>
-
-type UserType = {
-    user_id: string
-    name: string
-}
-export type MessageType = {
-    user: UserType
-    message: string
-    id: string
-}
 
 const initialState = {
     messages: [] as Array<MessageType>
@@ -35,7 +26,22 @@ const newMessageSentAC = (message: MessageType) =>
     ({type: "CHAT/NEW-MESSAGES-SENT", message} as const)
 
 export const createChannelTC = () => (dispatch: Dispatch) => {
+    API.createChannel()
+    API.subscribe((messages: Array<MessageType>) => {
+            dispatch(messagesReceivedAC(messages))
+        },
+        (message: MessageType) => {
+            dispatch(newMessageSentAC(message))
+        })
 }
 export const destroyChannelTC = () => (dispatch: Dispatch) => {
+    API.destroyChannel()
+}
+
+export const setClientNameTC = (name: string) => (dispatch: Dispatch) => {
+    API.sendClientName(name)
+}
+export const sendMessageTC = (message: string) => (dispatch: Dispatch) => {
+    API.sendMessage(message)
 }
 
