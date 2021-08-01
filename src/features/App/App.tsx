@@ -1,15 +1,15 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import './App.css';
-import {io} from "socket.io-client";
+import {socket} from "../../dal/api";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "../../bll/store";
+import {createChannelTC, destroyChannelTC, MessageType} from "../../bll/chat-reducer";
 
-// let socket = io("https://simple-chat-back.herokuapp.com", {transports: ['websocket', 'polling', 'flashsocket']})
-let socket = io("http://localhost:3009", {transports: ['websocket', 'polling', 'flashsocket']})
 
-type MessageType = {
-    user: { user_id: string, name: string }, message: string, id: string
-}
+export const App: React.FC = React.memo(() => {
 
-function App() {
+    const messagesFromRedux = useSelector<AppRootStateType, Array<MessageType>>(state => state.chat.messages)
+    const dispatch = useDispatch()
 
     const [message, setMessage] = useState("")
     const [name, setName] = useState("")
@@ -19,12 +19,10 @@ function App() {
     const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
-        socket.on("messages-showed", (messages: Array<MessageType>) => {
-            setMessages(messages)
-        })
-        socket.on("new-message-sent", (message: MessageType) => {
-            setMessages((messages) => [...messages, message])
-        })
+        dispatch(createChannelTC())
+        return () => {
+            dispatch(destroyChannelTC())
+        }
     }, [])
 
     useEffect(() => {
@@ -94,6 +92,4 @@ function App() {
             <button onClick={onClickMessageHandler}>send message</button>
         </div>
     );
-}
-
-export default App;
+})
