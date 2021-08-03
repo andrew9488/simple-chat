@@ -1,6 +1,8 @@
 import React from "react";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../common/CommonField/CommonField";
+import {Button} from "@material-ui/core";
+import styles from "./FieldForm.module.css";
 
 
 export type CommonFormPropsType = {
@@ -16,12 +18,12 @@ const Form: React.FC<InjectedFormProps<CommonFormPropsType, FormType> & FormType
     const {handleSubmit, disable, label} = props
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
+        <form onSubmit={handleSubmit} className={styles.formContainer}>
+            <div className={styles.inputBlock}>
                 <Field name="newText" type="text" component={Input} label={label}/>
             </div>
-            <div>
-                <button disabled={disable} type="submit">Send</button>
+            <div className={styles.submitBlock}>
+                <Button variant="contained" color="primary" size="medium" disabled={disable} type="submit">Send</Button>
             </div>
 
         </form>
