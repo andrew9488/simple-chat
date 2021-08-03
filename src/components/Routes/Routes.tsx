@@ -1,10 +1,10 @@
 import React from "react";
 import {Route, Switch} from "react-router-dom";
-import {UserName} from "../common/UserName/UserName";
-import {EnterUserName} from "../EnterUserName";
+import {UserName} from "../UserName/UserName";
+import {EnterUserName} from "../EnterUserName/EnterUserName";
 import {Chat} from "../../features/Chat/Chat";
 
-const PATH = {
+export const PATH = {
     USER_NAME: "/",
     ENTER_USER_NAME: "/enter_user_name",
     CHAT: "/chat"
