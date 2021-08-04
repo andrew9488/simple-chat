@@ -10,15 +10,16 @@ export type CommonFormPropsType = {
 }
 
 type FormType = {
+    writingMessage?: () => void
     disable?: boolean
     label?: string
 }
 
 const Form: React.FC<InjectedFormProps<CommonFormPropsType, FormType> & FormType> = React.memo((props) => {
-    const {handleSubmit, disable, label} = props
+    const {handleSubmit, disable, label, writingMessage} = props
 
     return (
-        <form onSubmit={handleSubmit} className={styles.formContainer}>
+        <form onSubmit={handleSubmit} className={styles.formContainer} onKeyPress={()=>writingMessage&&writingMessage()}>
             <div className={styles.inputBlock}>
                 <Field name="newText" type="text" component={Input} label={label}/>
             </div>
@@ -30,5 +31,5 @@ const Form: React.FC<InjectedFormProps<CommonFormPropsType, FormType> & FormType
     );
 })
 export const FieldForm = reduxForm<CommonFormPropsType, FormType>({
-    form: "formForSendNewText"
+    form: "formForSendText"
 })(Form)
