@@ -8,4 +8,8 @@ export const useStyles = makeStyles({
         justifyContent: "center",
         alignItems: "center",
     },
+    input :{
+        width: 200,
+        marginRight: 15,
+    }
 });
