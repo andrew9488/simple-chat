@@ -13,6 +13,15 @@ export const useStyles = makeStyles({
         height: 500,
         minWidth: "93%"
     },
+    message: {
+        backgroundColor: "#e0e0e0",
+        padding: 10,
+        borderRadius: 7,
+        "&:nth-child(2n)": {
+            backgroundColor: "#eeeeee"
+        }
+
+    },
     formBlock: {
         display: "flex",
         justifyContent: "space-between",
@@ -22,7 +31,7 @@ export const useStyles = makeStyles({
     input: {
         width: "80%"
     },
-    button:{
+    button: {
         position: "absolute",
         right: 0
     }

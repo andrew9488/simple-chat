@@ -62,7 +62,7 @@ export const Chat: React.FC = React.memo(() => {
         <Card className={classes.root}>
             <CardContent onScroll={onScrollHandler} className={classes.chatBlock}>
                 {messages.map(m => {
-                    return <Message key={m.id} message={m}/>
+                    return <Message key={m.id} message={m} className={classes.message}/>
 
                 })}
                 {writingUsers.map(u => {

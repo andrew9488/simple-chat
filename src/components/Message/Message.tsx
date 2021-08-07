@@ -3,13 +3,13 @@ import {MessageType} from "../../dal/api";
 
 type MessagePropsType = {
     message: MessageType
+    className: string
 }
 
-export const Message: React.FC<MessagePropsType> = React.memo(({message}) => {
+export const Message: React.FC<MessagePropsType> = React.memo(({message, className}) => {
     return (
-        <div>
+        <div className={className}>
             <b>{message.user.name}: </b> <span>{message.message}</span>
-            <hr/>
         </div>
     );
 })
