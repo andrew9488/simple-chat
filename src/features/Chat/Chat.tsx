@@ -1,18 +1,19 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {MessageType, UserType} from "../../dal/api";
 import {Message} from "../../components/Message/Message";
 import {WritingUser} from "../../components/WritingUser/WritingUser";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../bll/store";
 import {sendMessageTC, writingMessageTC} from "../../bll/chat-reducer";
-import {reset} from "redux-form";
 import Card from "@material-ui/core/Card";
 import CardContent from '@material-ui/core/CardContent';
 import {useStyles} from "./materialUIstyles";
-import {CommonFormPropsType, FieldForm} from "../../components/FieldForm/FieldForm";
+import {TextField} from "@material-ui/core";
+import Button from '@material-ui/core/Button';
 
 export const Chat: React.FC = React.memo(() => {
 
+    const [value, setValue] = useState("")
     const messages = useSelector<AppRootStateType, Array<MessageType>>(state => state.chat.messages)
     const writingUsers = useSelector<AppRootStateType, Array<UserType>>(state => state.chat.writingUsers)
     const dispatch = useDispatch()
@@ -43,20 +44,23 @@ export const Chat: React.FC = React.memo(() => {
         setLastScrollTop(element.scrollTop)
     }
 
-    const onChangeFormMessageHandler = useCallback((text: CommonFormPropsType) => {
-        if (text.newText?.trim() !== "") {
-            dispatch(sendMessageTC(text.newText))
-            dispatch(reset("formForSendText"))
-        }
-    }, [])
-
+    const onChangeValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(e.target.value)
+    }
     const onKeyPressMessageHandler = () => {
         dispatch(writingMessageTC())
     }
 
+    const onClickSendMessageHandler = () => {
+        if (value.trim() !== "") {
+            dispatch(sendMessageTC(value))
+            setValue("")
+        }
+    }
+
     return (
         <Card className={classes.root}>
-            <CardContent onScroll={onScrollHandler}>
+            <CardContent onScroll={onScrollHandler} className={classes.chatBlock}>
                 {messages.map(m => {
                     return <Message key={m.id} message={m}/>
 
@@ -67,7 +71,26 @@ export const Chat: React.FC = React.memo(() => {
                 })}
                 <div ref={messagesEndRef}/>
             </CardContent>
-            <FieldForm onSubmit={onChangeFormMessageHandler} writingMessage={onKeyPressMessageHandler}/>
+            <div className={classes.formBlock}>
+                <TextField
+                    className={classes.input}
+                    id="message"
+                    multiline
+                    maxRows={3}
+                    value={value}
+                    onChange={onChangeValueHandler}
+                    onKeyPress={onKeyPressMessageHandler}
+                />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    className={classes.button}
+                    onClick={onClickSendMessageHandler}
+                >
+                    Send
+                </Button>
+            </div>
         </Card>
     );
 })
