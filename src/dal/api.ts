@@ -30,7 +30,7 @@ export const API = {
         this.socket?.on("writing-message", writingMessage)
     },
     sendClientName(name: string) {
-        this.socket?.emit("client-sent-name ", name)
+        this.socket?.emit("client-sent-name", name)
     },
     sendMessage(message: string) {
         this.socket?.emit("client-sent-message", message)

@@ -36,7 +36,7 @@ export const EnterUserName: React.FC = React.memo(() => {
     return (
         <Card className={classes.root}>
             <TextField className={classes.input} value={name} id="nick name" label="nick name"
-                       color={error ? "secondary" : "primary"}
+                       color={error ? "secondary" : "primary"} autoComplete="off"
                        onChange={onChangeNameHandler} helperText={messageError} onBlur={()=>setError(false)}/>
             <Button disabled={error} variant="contained" color="primary" onClick={onClickNameHandler} size="small">
                 Send Name
