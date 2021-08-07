@@ -10,7 +10,7 @@ export const useStyles = makeStyles({
     },
     chatBlock: {
         overflowY: "scroll",
-        height: 500,
+        height: 520,
         minWidth: "93%"
     },
     message: {

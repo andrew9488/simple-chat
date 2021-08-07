@@ -3,11 +3,12 @@ import React from "react";
 
 type WritingUserPropsType = {
     user: UserType
+    className: string
 }
 
-export const WritingUser: React.FC<WritingUserPropsType> = React.memo(({user}) => {
+export const WritingUser: React.FC<WritingUserPropsType> = React.memo(({user, className}) => {
     return (
-        <div>
+        <div className={className}>
             <b>{user.name}: </b> <span>...</span>
         </div>
     );

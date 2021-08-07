@@ -48,7 +48,7 @@ export const Chat: React.FC = React.memo(() => {
         setValue(e.target.value)
     }
     const onKeyPressMessageHandler = () => {
-        dispatch(writingMessageTC())
+            dispatch(writingMessageTC())
     }
 
     const onClickSendMessageHandler = () => {
@@ -66,7 +66,7 @@ export const Chat: React.FC = React.memo(() => {
 
                 })}
                 {writingUsers.map(u => {
-                    return <WritingUser key={u.user_id} user={u}/>
+                    return <WritingUser key={u.user_id} user={u} className={classes.message}/>
 
                 })}
                 <div ref={messagesEndRef}/>
